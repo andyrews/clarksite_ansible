@@ -1,0 +1,13 @@
+- hosts: vbox-vm
+  become: true  #root user
+  #become_password: "{{ john_pass }}"
+  #gather_facts: true
+  vars:
+    ansible_become_password: "{{ john_pass }}"
+  roles:
+    #- initial-setup
+    #- docker
+    #- postgres
+    #- backend
+    - frontend
+    - nginx

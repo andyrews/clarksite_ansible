@@ -1,0 +1,51 @@
+#SPDX-License-Identifier: MIT-0
+---
+- name: Create directory for personal web
+  ansible.builtin.file:
+    path: /opt/personalweb/{{ container_name }}/conf
+    state: directory
+    mode: "0755"
+
+- name: Create directory for ssl certs
+  ansible.builtin.file:
+    path: /opt/personalweb/{{ container_name }}/conf/certs
+    state: directory
+    mode: "0755"
+
+- name: Render compose template
+  ansible.builtin.template:
+    src: compose.yaml.j2
+    dest: /opt/personalweb/{{ container_name }}/docker-compose.yaml
+
+- name: Render nginx configuration template
+  ansible.builtin.template:
+    src: conf/default.conf.j2
+    dest: /opt/personalweb/{{ container_name }}/conf/nginx.conf
+    mode: "0644"
+
+- name: Copy SSL certificates
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "/opt/personalweb/{{ container_name }}/conf/certs/{{ item.dest }}"
+    mode: "0644"
+  loop:
+    - { src: '../templates/conf/certs/ssl.crt', dest: 'ssl.crt' }
+    - { src: '../templates/conf/certs/ssl.key', dest: 'ssl.key' }
+  when: item.src is defined
+
+- name: Assert frontend container health
+  community.docker.docker_container_info:
+    name: "frontend"
+  until:
+    - container_info.container.State.ExitCode is defined
+    - container_info.container.State.ExitCode == 0
+  register: container_info
+  retries: 153
+  delay: 10
+  failed_when: container_info.container.State.ExitCode != 0
+  changed_when: false
+
+- name: Run docker compose up
+  ansible.builtin.shell:
+    cmd: docker compose down ; docker compose -f /opt/personalweb/{{ container_name }}/docker-compose.yaml up -d
+  when: container_info.container.State.ExitCode == 0

@@ -1,0 +1,19 @@
+#SPDX-License-Identifier: MIT-0
+---
+# vars file for roles/docker-deps
+image_name: nginx:alpine
+container_name: nginx
+container_port_http: 80
+container_port_https: 443
+
+rev_volume: /etc/nginx/conf.d
+rev_conf_vol: /opt/personalweb/nginx/conf
+
+cert_volume: /etc/nginx/ssl/certs
+cert_conf_vol: /opt/personalweb/nginx/conf/certs
+
+frontend_name: frontend
+backend_name: backend
+
+frontend_port: 3000
+backend_port: 8080

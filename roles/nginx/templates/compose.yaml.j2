@@ -1,0 +1,17 @@
+services:
+  {{ container_name }}:
+    image: {{ image_name }}
+    restart: always
+    container_name: {{ container_name }}
+    networks:
+      - {{ docker_network }}
+    ports:
+      - {{ container_port_http }}:{{ container_port_http }}
+      - {{ container_port_https }}:{{ container_port_https }}
+    volumes:
+      - {{ rev_conf_vol }}:{{ rev_volume }}:ro
+      - {{ cert_conf_vol }}:{{ cert_volume }}:ro
+
+networks:
+  {{ docker_network }}:
+    external: true

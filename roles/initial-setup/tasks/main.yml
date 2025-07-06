@@ -1,0 +1,21 @@
+#SPDX-License-Identifier: MIT-0
+---
+- name: Retrieve Python "$PATH"
+  stat:
+    path: /usr/bin/python3
+  register: python_path
+
+- name: Install Python 3 on RHEL/CentOS
+  raw: |
+    dnf module enable python39 -y &&\ dnf install python39 -y
+  when: not python_path.stat.exists
+
+- name: Test_setup
+  ansible.builtin.shell:
+    cmd: echo "$PATH"
+
+- name: Create directory for docker deployment
+  ansible.builtin.file:
+    path: /opt/personalweb
+    state: directory
+    mode: '0755'

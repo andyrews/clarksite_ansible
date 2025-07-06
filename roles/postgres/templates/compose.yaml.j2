@@ -1,0 +1,22 @@
+services:
+  {{ container_name }}:
+    image: {{ image_name }}
+    restart: always
+    container_name: {{ container_name }}
+    networks:
+      - {{ docker_network }}
+    ports:
+      - {{ container_port }}:{{ container_port }}
+    volumes:
+      - {{ volume_name }}:/var/lib/postgresql/data 
+    environment:
+      POSTGRES_PASSWORD: "{{ POSTGRES_PASSWORD }}"
+      POSTGRES_USER: "{{ POSTGRES_USER }}"
+      POSTGRES_DB: "{{ POSTGRES_DB }}"
+
+networks:
+  {{ docker_network }}:
+    external: true
+
+volumes:
+  {{ volume_name }}:

@@ -1,0 +1,29 @@
+#SPDX-License-Identifier: MIT-0
+---
+- name: Create directory for personal web
+  ansible.builtin.file:
+    path: /opt/personalweb/{{ container_name }}/
+    state: directory
+    mode: '0755'
+
+- name: Render compose template
+  ansible.builtin.template:
+    src: compose.yaml.j2
+    dest: /opt/personalweb/{{ container_name }}/docker-compose.yaml
+
+- name: Assert postgres container health
+  community.docker.docker_container_info:
+    name: 'postgres'
+  until:
+    - container_info.container.State.ExitCode is defined
+    - container_info.container.State.ExitCode == 0
+  register: container_info
+  retries: 15
+  delay: 10
+  failed_when: container_info.container.State.ExitCode != 0
+  changed_when: false 
+
+- name: Run docker compose up
+  ansible.builtin.shell:
+    cmd: docker compose down ; docker compose -f /opt/personalweb/{{ container_name }}/docker-compose.yaml up -d
+  when: container_info.container.State.ExitCode == 0

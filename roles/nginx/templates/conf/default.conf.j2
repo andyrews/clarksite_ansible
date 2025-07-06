@@ -1,0 +1,29 @@
+server {
+    listen       80;
+    server_name  {{ hostname }};
+    return 301   https://{{ hostname }}$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name {{ hostname }};
+    ssl_certificate     /etc/nginx/ssl/certs/ssl.crt;
+    ssl_certificate_key /etc/nginx/ssl/certs/ssl.key;
+    ssl_protocols       TLSv1.3;
+
+    location / {
+    proxy_pass http://{{ frontend_name }}:{{ frontend_port }};
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /api/ {
+        proxy_pass http://{{ backend_name }}:{{ backend_port }};
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
