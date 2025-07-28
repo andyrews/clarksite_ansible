@@ -49,3 +49,17 @@
   ansible.builtin.shell:
     cmd: docker compose down ; docker compose -f /opt/personalweb/{{ container_name }}/docker-compose.yaml up -d
   when: container_info.container.State.ExitCode == 0
+
+- name: Obtain nginx IP
+  community.docker.docker_container_exec:
+    container: nginx
+    command: hostname -i
+  register: result
+
+- name: Print stdout
+  ansible.builtin.debug:
+    var: result.stdout
+
+- name: Write to /etc/hosts
+  ansible.builtin.shell:
+    cmd: echo "{{ result.stdout }}  personalwebsite.com" >> /etc/hosts
