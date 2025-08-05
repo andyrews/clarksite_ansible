@@ -2,5 +2,6 @@
 ---
 # vars file for roles/docker-deps
 image_name: andyrews/test-frontend
+image_tag: 1.0.3
 container_name: frontend
 container_port: 3000

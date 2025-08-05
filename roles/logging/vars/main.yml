@@ -1,0 +1,21 @@
+container_visualization_name: grafana
+container_log_name: loki
+container_loglisten_name: promtail
+container_tempo_init: init
+container_cache_name: memcached
+container_disttracing_name: tempo
+container_traceinst_name: k6-tracing
+container_metric_name: prometheus
+
+prometheus_port: 9090
+grafana_port: 3100
+tempo_port: 3300
+loki_port: 3200
+
+cache_tag: 1.6.38
+
+loki_container_config: /etc/loki/local-config.yaml
+promtail_container_config: /etc/promtail/config.yml
+tempo_container_config: /etc/tempo.yaml
+prometheus_container_config: /etc/prometheus.yaml
+

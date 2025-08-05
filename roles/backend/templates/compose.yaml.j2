@@ -1,12 +1,16 @@
 services:
   {{ container_name }}:
-    image: {{ image_name }}
+    image: {{ image_name }}:{{ image_tag }}
     restart: always
     container_name: {{ container_name }}
-    networks:
-      - {{ docker_network }}
+    environment:
+      - OTEL_SERVICE_NAME=backend
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://tempo:4318
+      - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
     ports:
       - {{ container_port }}:{{ container_port }}
+    networks:
+      - {{ docker_network }}
 networks:
   {{ docker_network }}:
     external: true

@@ -60,6 +60,6 @@
   ansible.builtin.debug:
     var: result.stdout
 
-- name: Write to /etc/hosts
-  ansible.builtin.shell:
-    cmd: echo "{{ result.stdout }}  personalwebsite.com" >> /etc/hosts
+      #- name: Write to /etc/hosts
+      #ansible.builtin.shell:
+      #cmd: echo "{{ result.stdout }}  personalwebsite.com" >> C:\Windows\System32\drivers\etc\hosts

@@ -1,0 +1,14 @@
+- name: Create directory for personal web
+  ansible.builtin.file:
+    path: /opt/personalweb/{{ container_visualization_name }}/
+    state: directory
+    mode: '0755'
+
+- name: Render compose template
+  ansible.builtin.template:
+    src: compose.yaml.j2
+    dest: /opt/personalweb/{{ container_visualization_name }}/docker-compose.yaml
+
+- name: Run docker compose up
+  ansible.builtin.shell:
+    cmd: docker compose down ; docker compose -f /opt/personalweb/{{ container_visualization_name }}/docker-compose.yaml up -d

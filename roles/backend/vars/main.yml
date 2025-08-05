@@ -2,5 +2,6 @@
 ---
 # vars file for roles/docker-deps
 image_name: andyrews/test-backend
+image_tag: 1.0.3
 container_name: backend
 container_port: 8080

@@ -5,8 +5,6 @@ services:
     container_name: {{ container_name }}
     networks:
       - {{ docker_network }}
-    ports:
-      - {{ container_port }}:{{ container_port }}
     volumes:
       - {{ volume_name }}:/var/lib/postgresql/data 
     environment:
