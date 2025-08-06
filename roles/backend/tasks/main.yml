@@ -23,7 +23,7 @@
   failed_when: container_info.container.State.ExitCode != 0
   changed_when: false 
 
-- name: Run docker compose up
-  ansible.builtin.shell:
-    cmd: docker compose down ; docker compose -f /opt/personalweb/{{ container_name }}/docker-compose.yaml up -d
-  when: container_info.container.State.ExitCode == 0
+- name: Docker compose deploy
+  shell:
+    cmd: "docker compose down;docker compose up -d"
+    chdir: "/opt/personalweb/{{ container_name }}"

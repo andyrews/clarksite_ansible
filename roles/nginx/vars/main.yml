@@ -6,8 +6,8 @@ container_name: nginx
 container_port_http: 80
 container_port_https: 443
 
-rev_volume: /etc/nginx/conf.d
-rev_conf_vol: /opt/personalweb/nginx/conf
+rev_volume: /etc/nginx/nginx.conf
+rev_conf_vol: /opt/personalweb/nginx/conf/nginx.conf
 
 cert_volume: /etc/nginx/ssl/certs
 cert_conf_vol: /opt/personalweb/nginx/conf/certs

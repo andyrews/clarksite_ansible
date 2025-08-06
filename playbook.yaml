@@ -6,10 +6,9 @@
     ansible_become_password: "{{ john_pass }}"
   roles:
     #- initial-setup
-    - docker
-    - postgres
+    #- docker
+    #- postgres
     - backend
-    - frontend
-      #- post
-    - logging
+    #- frontend
+    #- logging
     - nginx

@@ -10,6 +10,7 @@ services:
   {{ container_tempo_init }}:
     image: &tempoImage {{ container_visualization_name }}/{{ container_disttracing_name }}:latest
     user: root
+    container_name: {{ container_tempo_init }}
     entrypoint:
       - "chown"
       - "10001:10001"
@@ -33,6 +34,7 @@ services:
   {{ container_disttracing_name }}:
     image: *tempoImage
     command: ["-config.file={{ tempo_container_config }}"]
+    container_name: {{ container_disttracing_name }}
     volumes:
       - /Git_Clones/clarksite_ansible/roles/logging/files/tempo.yaml:{{ tempo_container_config }}
       - {{ tempo_volume }}:/var/tempo
@@ -51,6 +53,7 @@ services:
 
   {{ container_metric_name }}:
     image: prom/{{ container_metric_name }}:latest
+    container_name: {{ container_metric_name }}
     command:
       - --config.file={{ prometheus_container_config }}
       - --web.enable-remote-write-receiver
@@ -65,6 +68,7 @@ services:
 
   {{ container_log_name }}:
     image: {{ container_visualization_name }}/{{ container_log_name }}
+    container_name: {{ container_log_name }}
     ports:
       - "{{ loki_port }}:3100"
     command: -config.file={{ loki_container_config }}
@@ -73,6 +77,7 @@ services:
 
   {{ container_loglisten_name }}:
     image: {{  container_visualization_name }}/{{ container_loglisten_name }}:latest
+    container_name: {{ container_loglisten_name }}
     volumes:
       - /Git_Clones/clarksite_ansible/roles/logging/files/promtail-config.yml:{{ promtail_container_config }}
       - /var/run/docker.sock:/var/run/docker.sock
@@ -86,11 +91,12 @@ services:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
       - GF_FEATURE_TOGGLES_ENABLE=alertingSimplifiedRouting,alertingQueryAndExpressionsStepMode,traceqlEditor,metricsSummary
-      - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s/grafana/
-      - GF_SERVER_SERVE_FROM_SUB_PATH=true
+      - GF_SERVER_ROOT_URL=https://personalwebsite.com/grafana/
+      - GF_SERVER_SERVE_FROM_SUB_PATH=false
       - GF_AUTH_DISABLE_LOGIN_FORM=true
       - GF_INSTALL_PLUGINS=https://storage.googleapis.com/integration-artifacts/grafana-exploretraces-app/grafana-exploretraces-app-latest.zip;grafana-traces-app
     image: {{ container_visualization_name }}/{{ container_visualization_name }}
+    container_name: {{ container_visualization_name }}
     volumes:
       - /Git_Clones/clarksite_ansible/roles/logging/files/grafana-datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
     ports:

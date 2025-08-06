@@ -9,6 +9,8 @@
     src: compose.yaml.j2
     dest: /opt/personalweb/{{ container_visualization_name }}/docker-compose.yaml
 
-- name: Run docker compose up
-  ansible.builtin.shell:
-    cmd: docker compose down ; docker compose -f /opt/personalweb/{{ container_visualization_name }}/docker-compose.yaml up -d
+- name: Compose deploy
+  shell:
+    cmd: "docker compose down ; docker compose up -d"
+    chdir: "/opt/personalweb/{{ container_visualization_name }}"
+
